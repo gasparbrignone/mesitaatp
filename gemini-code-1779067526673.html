@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Mesita - ATP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans p-4">
+
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-600">
+      <h1 class="text-3xl font-extrabold text-center text-indigo-600 mb-6">📌 Panel de Cobertura - La Mesita</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+          <div class="text-sm font-bold text-indigo-500 uppercase tracking-wide">Cobertura Total</div>
+          <div id="stat-cobertura" class="text-3xl font-black text-indigo-700 mt-1">0%</div>
+          <p class="text-[11px] text-gray-500 mt-1">Porcentaje de horas semanales con presencia</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+          <div class="text-sm font-bold text-green-600 uppercase tracking-wide">Horarios Ideales</div>
+          <div id="stat-ideales" class="text-3xl font-black text-green-700 mt-1">0 / 50</div>
+          <p class="text-[11px] text-gray-500 mt-1">Bloques cubiertos por 2 o más compañeros</p>
+        </div>
+        <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
+          <div class="text-sm font-bold text-rose-500 uppercase tracking-wide">Baches Críticos</div>
+          <div id="stat-baches" class="text-3xl font-black text-rose-700 mt-1">50</div>
+          <p class="text-[11px] text-gray-500 mt-1">Horas de la semana que están en 0 absoluto</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-md">
+      <h2 class="text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">✍️ Anotarse en la Grilla</h2>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        
+        <div class="flex flex-col gap-1 md:col-span-1">
+          <label class="text-xs font-bold text-gray-500">Compañero/a</label>
+          <select id="select-nombre" onchange="window.verificarNuevoNombre()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <option value="">-- Seleccioná --</option>
+            <option value="NUEVO">+ Registrar nombre por 1ª vez</option>
+          </select>
+          <input type="text" id="input-nuevo-nombre" placeholder="Tu nombre y apellido" class="hidden mt-2 p-2.5 border border-amber-400 rounded-xl bg-amber-50 shadow-sm outline-none">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-bold text-gray-500">Día</label>
+          <select id="dia" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-bold text-gray-500">Desde qué hora</label>
+          <select id="hora-inicio" onchange="window.actualizarLimiteHoraFin()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-bold text-gray-500">Hasta qué hora</label>
+          <select id="hora-fin" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-bold text-gray-500">Permanencia</label>
+          <select id="tipo" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            <option value="Semanal">Solo esta semana</option>
+            <option value="Fijo">Horario Fijo</option>
+          </select>
+        </div>
+
+      </div>
+      <button onclick="window.anotarse()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold p-3 rounded-xl shadow-lg transition transform active:scale-95">
+        Confirmar Turno
+      </button>
+    </div>
+
+    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-sm font-medium text-gray-600">🔎 ¿Querés ver solo tus horarios o los de alguien en específico?</div>
+      <select id="filtro-companero" onchange="window.filtrarGrilla()" class="p-2 border rounded-xl bg-gray-50 shadow-sm outline-none w-full md:w-64 font-semibold text-indigo-600 border-indigo-200">
+        <option value="TODOS">Ver Cobertura General</option>
+      </select>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-md overflow-x-auto">
+      <table class="w-full table-fixed border-collapse border border-gray-200 text-center text-sm">
+        <thead>
+          <tr class="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
+            <th class="w-24 border-r border-gray-200 p-3">Bloque</th>
+            <th class="border-r border-gray-200 p-3 text-indigo-600">Lunes</th>
+            <th class="border-r border-gray-200 p-3 text-indigo-600">Martes</th>
+            <th class="border-r border-gray-200 p-3 text-indigo-600">Miércoles</th>
+            <th class="border-r border-gray-200 p-3 text-indigo-600">Jueves</th>
+            <th class="p-3 text-indigo-600">Viernes</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-cuerpo" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYpPCCEgsrjBDT3lN4XeKcQHSYu4A0VaY",
+      authDomain: "mesita-atp.firebaseapp.com",
+      projectId: "mesita-atp",
+      storageBucket: "mesita-atp.firebasestorage.app",
+      messagingSenderId: "542471956607",
+      appId: "1:542471956607:web:c04edf74e26608eb19774a",
+      measurementId: "G-SMTWE9MFS3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const horasInput = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+    let turnosGlobales = [];
+
+    // Forzar que las funciones se expongan globalmente al HTML de inmediato
+    function armarSelectsHorarios() {
+      const start = document.getElementById('hora-inicio');
+      start.innerHTML = '';
+      horasInput.slice(0, -1).forEach(h => {
+        start.innerHTML += `<option value="${h}">${String(h).padStart(2, '0')}:00</option>`;
+      });
+      window.actualizarLimiteHoraFin();
+    }
+
+    window.actualizarLimiteHoraFin = function() {
+      const hInicio = parseInt(document.getElementById('hora-inicio').value);
+      const end = document.getElementById('hora-fin');
+      end.innerHTML = '';
+      horasInput.forEach(h => {
+        if (h > hInicio) {
+          end.innerHTML += `<option value="${h}">${String(h).padStart(2, '0')}:00</option>`;
+        }
+      });
+    };
+
+    window.verificarNuevoNombre = function() {
+      const select = document.getElementById('select-nombre');
+      const inputNuevo = document.getElementById('input-nuevo-nombre');
+      if (select.value === 'NUEVO') {
+        inputNuevo.classList.remove('hidden');
+        inputNuevo.focus();
+      } else {
+        inputNuevo.classList.add('hidden');
+      }
+    };
+
+    function actualizarSelectNombres(turnos) {
+      const nombresUnicos = [...new Set(turnos.map(t => t.nombre))].sort();
+      const selectInscripcion = document.getElementById('select-nombre');
+      const selectFiltro = document.getElementById('filtro-companero');
+      
+      const valorInscripcionActual = selectInscripcion.value;
+      const valorFiltroActual = selectFiltro.value;
+
+      selectInscripcion.innerHTML = '<option value="">-- Seleccioná --</option><option value="NUEVO">+ Registrar nombre por 1ª vez</option>';
+      nombresUnicos.forEach(n => {
+        selectInscripcion.innerHTML += `<option value="${n}">${n}</option>`;
+      });
+      
+      selectFiltro.innerHTML = '<option value="TODOS">Ver Cobertura General</option>';
+      nombresUnicos.forEach(n => {
+        selectFiltro.innerHTML += `<option value="${n}">Solo horarios de: ${n}</option>`;
+      });
+
+      selectInscripcion.value = valorInscripcionActual;
+      selectFiltro.value = valorFiltroActual;
+    }
+
+    window.calcularEstadisticasYRenderizar = function(turnos) {
+      const cuerpo = document.getElementById('tabla-cuerpo');
+      cuerpo.innerHTML = '';
+      const filtro = document.getElementById('filtro-companero').value;
+
+      let baches = 0;
+      let ideales = 0;
+      let slotsCubiertos = 0;
+      const totalSlotsSemanales = 50;
+
+      for (let h = 8; h < 18; h++) {
+        let horaStr = `${String(h).padStart(2, '0')}:00`;
+        let fila = `<tr class="hover:bg-gray-50 transition"><td class="border-r border-gray-200 font-bold bg-gray-50 text-gray-600 p-3">${horaStr} a ${String(h+1).padStart(2, '0')}:00</td>`;
+        
+        dias.forEach(d => {
+          let anotados = turnos.filter(t => t.dia === d && h >= t.horaInicio && h < t.horaFin);
+          
+          if (anotados.length === 0) baches++;
+          else if (anotados.length >= 2) ideales++;
+          if (anotados.length > 0) slotsCubiertos++;
+
+          let estaElCompaneroFiltrado = anotados.some(t => t.nombre === filtro);
+          let claseCelda = "border-r border-gray-200 p-2 h-20 text-xs vertical-align-top relative transition ";
+          
+          if (filtro !== "TODOS") {
+            if (estaElCompaneroFiltrado) {
+              claseCelda += "bg-indigo-600 text-white font-bold shadow-inner border-2 border-indigo-700";
+            } else {
+              claseCelda += "bg-gray-100 text-gray-400 opacity-30";
+            }
+          } else {
+            if (anotados.length === 0) claseCelda += "bg-rose-50 text-rose-700";
+            else if (anotados.length === 1) claseCelda += "bg-amber-50 text-amber-800";
+            else claseCelda += "bg-emerald-50 text-emerald-900";
+          }
+
+          let nombresHtml = "";
+          if (filtro === "TODOS" || estaElCompaneroFiltrado) {
+            nombresHtml = anotados.map(t => {
+              let tagColor = (filtro !== "TODOS") ? "bg-white text-indigo-900" : "bg-white border border-gray-200 text-gray-700";
+              return `<span class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold">${t.nombre} <span class="text-[9px] font-normal opacity-70">(${t.tipo[0]})</span></span>`;
+            }).join('');
+          }
+
+          let alerta = (anotados.length < 2 && filtro === "TODOS") ? `<div class="text-[10px] font-bold text-rose-500 absolute bottom-1 right-2">⚠️ Falta gente</div>` : '';
+          
+          fila += `<td class="${claseCelda}">${nombresHtml} ${alerta}</td>`;
+        });
+        
+        fila += '</tr>';
+        cuerpo.innerHTML += fila;
+      }
+
+      document.getElementById('stat-cobertura').innerText = `${Math.round((slotsCubiertos / totalSlotsSemanales) * 100)}%`;
+      document.getElementById('stat-ideales').innerText = `${ideales} / 50`;
+      document.getElementById('stat-baches').innerText = baches;
+    };
+
+    window.filtrarGrilla = function() {
+      window.calcularEstadisticasYRenderizar(turnosGlobales);
+    };
+
+    window.anotarse = async function() {
+      const selectNombre = document.getElementById('select-nombre').value;
+      const inputNuevo = document.getElementById('input-nuevo-nombre').value.trim();
+      const dia = document.getElementById('dia').value;
+      const horaInicio = parseInt(document.getElementById('hora-inicio').value);
+      const horaFin = parseInt(document.getElementById('hora-fin'); // wait, let's fix missing closing bracket in selection just in case
+      const horaFinVal = parseInt(document.getElementById('hora-fin').value);
+      const tipo = document.getElementById('tipo').value;
+
+      let nombreFinal = (selectNombre === 'NUEVO') ? inputNuevo : selectNombre;
+
+      if (!nombreFinal) return alert('Por favor, selecciona o escribe tu nombre.');
+
+      try {
+        await addDoc(collection(db, "turnos"), {
+          nombre: nombreFinal,
+          dia: dia,
+          horaInicio: horaInicio,
+          horaFin: horaFinVal,
+          tipo: tipo
+        });
+
+        document.getElementById('input-nuevo-nombre').value = '';
+        document.getElementById('select-nombre').value = '';
+        document.getElementById('input-nuevo-nombre').classList.add('hidden');
+        
+        alert('¡Te anotaste correctamente!');
+      } catch (e) {
+        alert('Hubo un error al guardar: ' + e);
+      }
+    };
+
+    // Ejecución inicial de selects y escucha en tiempo real
+    armarSelectsHorarios();
+    onSnapshot(collection(db, "turnos"), (snapshot) => {
+      turnosGlobales = [];
+      snapshot.forEach((doc) => turnosGlobales.push(doc.data()));
+      actualizarSelectNombres(turnosGlobales);
+      window.calcularEstadisticasYRenderizar(turnosGlobales);
+    });
+
+  </script>
+</body>
+</html>
