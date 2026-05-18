@@ -78,7 +78,7 @@
 
     <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
-        <span class="text-xs sm:text-sm font-medium text-gray-600 text-center">💡 <em>Tip: Podés dar de baja un horario tocando la cruz (×) al lado de tu nombre</em></span>
+        <span class="text-xs sm:text-sm font-medium text-gray-600 text-center">💡 <em>Tip: Podés dar de baja un horario tocando el nombre y confirmando</em></span>
         <select id="filtro-companero" onchange="window.filtrarGrilla()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm outline-none w-full sm:w-64 font-semibold text-indigo-600 border-indigo-200 text-sm">
           <option value="TODOS">Ver Cobertura General</option>
         </select>
@@ -176,7 +176,7 @@
     
     let fechasSemana = {};
     let feriadosDetectados = {};
-    let lunesActualTimestamp = 0;
+    let lunesFechaToken = ""; // Token único identificador de semana (ej: "18/05/2026")
 
     function calcularFechasDeLaSemana() {
       let hoy = new Date();
@@ -188,7 +188,10 @@
       let lunes = new Date(hoy);
       lunes.setDate(hoy.getDate() + distanciaALunes);
       lunes.setHours(0,0,0,0);
-      lunesActualTimestamp = lunes.getTime();
+
+      let diaStr = String(lunes.getDate()).padStart(2, '0');
+      let mesStr = String(lunes.getMonth() + 1).padStart(2, '0');
+      lunesFechaToken = `${diaStr}/${mesStr}/${lunes.getFullYear()}`;
 
       const feriados2026 = ["24/03", "02/04", "01/05", "25/05", "17/06", "20/06", "09/07", "17/08", "12/10", "23/11", "08/12", "25/12"];
 
@@ -196,9 +199,9 @@
         let fechaDia = new Date(lunes);
         fechaDia.setDate(lunes.getDate() + index);
         
-        let diaStr = String(fechaDia.getDate()).padStart(2, '0');
-        let mesStr = String(fechaDia.getMonth() + 1).padStart(2, '0');
-        let fechaCorta = `${diaStr}/${mesStr}`;
+        let dStr = String(fechaDia.getDate()).padStart(2, '0');
+        let mStr = String(fechaDia.getMonth() + 1).padStart(2, '0');
+        let fechaCorta = `${dStr}/${mStr}`;
 
         fechasSemana[d] = fechaCorta;
         feriadosDetectados[d] = feriados2026.includes(fechaCorta);
@@ -275,18 +278,15 @@
       if (modo === 'grilla') {
         btnGrilla.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm";
         btnLista.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600";
-        
-        // Control de visibilidad seguro sin alterar layouts fijos
-        contenedorTabla.className = "bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto block";
-        contenedorDias.className = "hidden";
-        cuerpoMovil.className = "hidden";
+        contenedorTabla.style.display = "block";
+        contenedorDias.style.display = "none";
+        cuerpoMovil.style.display = "none";
       } else {
         btnLista.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm";
         btnGrilla.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600";
-        
-        contenedorTabla.className = "bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto hidden md:block";
-        contenedorDias.className = "bg-white p-2 rounded-xl shadow-md flex justify-between gap-1 overflow-x-auto block md:hidden";
-        cuerpoMovil.className = "block md:hidden space-y-2";
+        contenedorTabla.style.display = ""; 
+        contenedorDias.style.display = "";
+        cuerpoMovil.style.display = "";
       }
       window.calcularEstadisticasYRenderizar(turnosGlobales);
     };
@@ -310,23 +310,23 @@
     }
 
     window.eliminarTurno = async function(id, nombre, dia, inicio, fin) {
-      const conf = confirm(`⚠️ ¿Che, estás seguro de que querés eliminar el horario de ${nombre} el día ${dia} de ${String(inicio).padStart(2,'0')}:00 a ${String(fin).padStart(2,'0')}:00?`);
+      const conf = confirm(`⚠️ ¿Querés eliminar el horario de ${nombre} el día ${dia} de ${String(inicio).padStart(2,'0')}:00 a ${String(fin).padStart(2,'0')}:00?`);
       if (conf) {
         try {
           await deleteDoc(doc(db, "turnos", id));
-          alert("Turno cancelado correctamente.");
+          alert("Turno eliminado.");
         } catch (e) {
-          alert("Error al eliminar turno: " + e);
+          alert("Error al eliminar: " + e);
         }
       }
     };
 
     window.eliminarEvento = async function(id, descripcion) {
-      const conf = confirm(`⚠️ ¿Querés dar de baja la actividad semanal: "${descripcion}"?\nLos bloques afectados volverán a estar habilitados.`);
+      const conf = confirm(`⚠️ ¿Querés dar de baja la actividad semanal: "${descripcion}"?`);
       if (conf) {
         try {
           await deleteDoc(doc(db, "eventos", id));
-          alert("Actividad eliminada.");
+          alert("Actividad eliminada con éxito.");
         } catch (e) {
           alert("Error al eliminar la actividad: " + e);
         }
@@ -385,23 +385,22 @@
           if (esFeriado) {
             nombresHtml = `<div class="text-center mt-4 font-bold text-amber-700 uppercase tracking-wider text-[10px]">Feriado 🎉</div>`;
           } else if (bloqueoActivo) {
-            // DISEÑO DEL BLOQUE ENTERO COMPACTO SEGURO
-            nombresHtml = `<div class="w-full h-full min-h-[70px] bg-red-100 border border-red-300 rounded-lg p-2 text-center text-red-800 font-black flex flex-col justify-center items-center uppercase tracking-wide text-[10px]">🚫 ACTIVIDAD ATP:<br><span class="normal-case font-semibold text-red-600 mt-0.5">${bloqueoActivo.texto}</span></div>`;
+            nombresHtml = `<div class="w-full h-full bg-red-100 border border-red-300 rounded-lg p-1 text-center text-red-800 font-black flex flex-col justify-center items-center uppercase text-[9px]">🚫 ACTIVIDAD ATP:<br><span class="normal-case font-semibold text-red-600">${bloqueoActivo.texto}</span></div>`;
           } else if (filtro === "TODOS" || estaElCompaneroFiltrado) {
             nombresHtml = anotados.map(t => {
               let esFiltrado = (filtro !== "TODOS");
               let tagColor = esFiltrado ? "bg-white text-indigo-900 border-2 border-indigo-500" : "bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition duration-150";
-              return `<button type="button" onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" title="Dar de baja este turno" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5">×</span></button>`;
+              return `<button type="button" onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5">×</span></button>`;
             }).join('');
           }
 
           let alerta = (anotados.length < 2 && filtro === "TODOS" && !esFeriado && !bloqueoActivo) ? `<div class="text-[10px] font-bold text-rose-500 absolute bottom-1 right-2">⚠️ Falta gente</div>` : '';
           filaDesktop += `<td class="${claseCeldaDesktop}">${nombresHtml} ${alerta}</td>`;
           
-          // --- REGISTRO MÓVIL (DÍA ACTIVO) ---
-          if (d === diaMovilActivo && modoVistaMovil === "lista") {
+          // --- REGISTRO MÓVIL (DÍA ACTIVO O SI SE SELECCIONÓ MODO GRILLA) ---
+          if ((d === diaMovilActivo && modoVistaMovil === "lista") || (modoVistaMovil === "grilla")) {
             let claseCeldaMovil = "p-3 rounded-xl flex flex-col gap-2 border bg-white shadow-sm transition ";
-            let encabezadoCard = `<div class="flex justify-between items-center font-bold text-sm"><span class="text-gray-500">${horaRangoStr}</span>`;
+            let encabezadoCard = `<div class="flex justify-between items-center font-bold text-sm"><span class="text-gray-500">${modoVistaMovil === 'grilla' ? d + ' ' : ''}${horaRangoStr}</span>`;
             
             if (esFeriado) {
               claseCeldaMovil += "bg-amber-50/70 border-amber-200";
@@ -477,7 +476,7 @@
           horaInicio: horaInicio,
           horaFin: horaFin,
           tipo: tipo,
-          timestamp: new Date().getTime()
+          semana: lunesFechaToken
         });
 
         document.getElementById('input-nuevo-nombre').value = '';
@@ -504,6 +503,7 @@
           horaInicio: horaInicio,
           horaFin: horaFin,
           texto: texto,
+          semana: lunesFechaToken,
           fechaCreacion: new Date().getTime() 
         });
         document.getElementById('ev-texto').value = '';
@@ -522,7 +522,7 @@
         
         snapshot.forEach((docSnap) => {
           let evData = docSnap.data();
-          if (evData.fechaCreacion < lunesActualTimestamp) {
+          if (evData.semana && evData.semana !== lunesFechaToken) {
             deleteDoc(doc(db, "eventos", docSnap.id));
           } else {
             eventosGlobales.push({ id: docSnap.id, ...evData });
@@ -558,7 +558,7 @@
       turnosGlobales = [];
       snapshot.forEach((docSnap) => {
         let tData = docSnap.data();
-        if (tData.tipo === "Semanal" && tData.timestamp && tData.timestamp < lunesActualTimestamp) {
+        if (tData.tipo === "Semanal" && tData.semana && tData.semana !== lunesFechaToken) {
           deleteDoc(doc(db, "turnos", docSnap.id));
         } else {
           turnosGlobales.push({ id: docSnap.id, ...tData });
