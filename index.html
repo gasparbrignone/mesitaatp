@@ -78,15 +78,15 @@
 
     <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
-        <span class="text-xs sm:text-sm font-medium text-gray-600 text-center">💡 <em>Tip: Podés borrar un turno tocando la cruz (×) al lado de tu nombre</em></span>
+        <span class="text-xs sm:text-sm font-medium text-gray-600 text-center">💡 <em>Tip: Podés dar de baja un horario tocando la cruz (×) al lado de tu nombre</em></span>
         <select id="filtro-companero" onchange="window.filtrarGrilla()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm outline-none w-full sm:w-64 font-semibold text-indigo-600 border-indigo-200 text-sm">
           <option value="TODOS">Ver Cobertura General</option>
         </select>
       </div>
 
       <div class="block md:hidden w-full border-t pt-3 md:pt-0 md:border-t-0 flex bg-gray-100 p-1 rounded-xl">
-        <button onclick="window.cambiarModoVistaMovil('lista')" id="btn-vista-lista" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm">Vista Vertical (Lista)</button>
-        <button onclick="window.cambiarModoVistaMovil('grilla')" id="btn-vista-grilla" class="flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600">Vista Horizontal (Grilla)</button>
+        <button type="button" onclick="window.cambiarModoVistaMovil('lista')" id="btn-vista-lista" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm">Vista Vertical (Lista)</button>
+        <button type="button" onclick="window.cambiarModoVistaMovil('grilla')" id="btn-vista-grilla" class="flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600">Vista Horizontal (Grilla)</button>
       </div>
     </div>
 
@@ -98,25 +98,23 @@
       <button onclick="window.cambiarDiaMovil('Viernes')" id="btn-Viernes" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600">Vie</button>
     </div>
 
-    <div>
-      <div class="block md:hidden space-y-2" id="lista-movil-cuerpo"></div>
-
-      <div id="contenedor-tabla-desktop" class="hidden md:block bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto">
-        <table class="w-full table-fixed border-collapse border border-gray-200 text-center text-sm min-w-[700px] md:min-w-0">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
-              <th class="w-24 border-r border-gray-200 p-3">Bloque</th>
-              <th id="th-Lunes" class="border-r border-gray-200 p-3 text-indigo-600">Lunes</th>
-              <th id="th-Martes" class="border-r border-gray-200 p-3 text-indigo-600">Martes</th>
-              <th id="th-Miércoles" class="border-r border-gray-200 p-3 text-indigo-600">Miércoles</th>
-              <th id="th-Jueves" class="border-r border-gray-200 p-3 text-indigo-600">Jueves</th>
-              <th id="th-Viernes" class="p-3 text-indigo-600">Viernes</th>
-            </tr>
-          </thead>
-          <tbody id="tabla-cuerpo" class="divide-y divide-gray-200"></tbody>
-        </table>
-      </div>
+    <div id="contenedor-tabla-desktop" class="hidden md:block bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto">
+      <table class="w-full table-fixed border-collapse border border-gray-200 text-center text-sm min-w-[750px] md:min-w-0">
+        <thead>
+          <tr class="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
+            <th class="w-24 border border-gray-200 p-3">Bloque</th>
+            <th id="th-Lunes" class="border border-gray-200 p-3 text-indigo-600">Lunes</th>
+            <th id="th-Martes" class="border border-gray-200 p-3 text-indigo-600">Martes</th>
+            <th id="th-Miércoles" class="border border-gray-200 p-3 text-indigo-600">Miércoles</th>
+            <th id="th-Jueves" class="border border-gray-200 p-3 text-indigo-600">Jueves</th>
+            <th id="th-Viernes" class="border border-gray-200 p-3 text-indigo-600">Viernes</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-cuerpo" class="divide-y divide-gray-200"></tbody>
+      </table>
     </div>
+
+    <div class="block md:hidden space-y-2" id="lista-movil-cuerpo"></div>
 
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
       <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">📅 Agregar una Actividad Semanal</h2>
@@ -268,7 +266,7 @@
 
     window.cambiarModoVistaMovil = function(modo) {
       modoVistaMovil = modo;
-      const btnLista = document.getElementById('btn-vista-vista');
+      const btnLista = document.getElementById('btn-vista-lista');
       const btnGrilla = document.getElementById('btn-vista-grilla');
       const contenedorTabla = document.getElementById('contenedor-tabla-desktop');
       const contenedorDias = document.getElementById('contenedor-dias-movil');
@@ -277,15 +275,18 @@
       if (modo === 'grilla') {
         btnGrilla.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm";
         btnLista.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600";
-        contenedorTabla.classList.remove('hidden', 'md:block'); 
-        contenedorDias.classList.add('hidden');
-        cuerpoMovil.classList.add('hidden');
+        
+        // Control de visibilidad seguro sin alterar layouts fijos
+        contenedorTabla.className = "bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto block";
+        contenedorDias.className = "hidden";
+        cuerpoMovil.className = "hidden";
       } else {
         btnLista.className = "flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-indigo-600 shadow-sm";
         btnGrilla.className = "flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-600";
-        contenedorTabla.classList.add('hidden', 'md:block'); 
-        contenedorDias.classList.remove('hidden');
-        cuerpoMovil.classList.remove('hidden');
+        
+        contenedorTabla.className = "bg-white p-4 sm:p-6 rounded-2xl shadow-md overflow-x-auto hidden md:block";
+        contenedorDias.className = "bg-white p-2 rounded-xl shadow-md flex justify-between gap-1 overflow-x-auto block md:hidden";
+        cuerpoMovil.className = "block md:hidden space-y-2";
       }
       window.calcularEstadisticasYRenderizar(turnosGlobales);
     };
@@ -309,19 +310,19 @@
     }
 
     window.eliminarTurno = async function(id, nombre, dia, inicio, fin) {
-      const conf = confirm(`⚠️ ¿Che, estás seguro de que querés eliminar el horario de ${nombre} el día ${dia} de ${String(inicio).padStart(2,'0')}:00 a ${String(fin).padStart(2,'0')}:00?\n\nEste bloque volverá a quedar vacío si no hay nadie más.`);
+      const conf = confirm(`⚠️ ¿Che, estás seguro de que querés eliminar el horario de ${nombre} el día ${dia} de ${String(inicio).padStart(2,'0')}:00 a ${String(fin).padStart(2,'0')}:00?`);
       if (conf) {
         try {
           await deleteDoc(doc(db, "turnos", id));
           alert("Turno cancelado correctamente.");
         } catch (e) {
-          alert("Error al intentar eliminar el turno: " + e);
+          alert("Error al eliminar turno: " + e);
         }
       }
     };
 
     window.eliminarEvento = async function(id, descripcion) {
-      const conf = confirm(`⚠️ ¿Querés dar de baja la actividad semanal: "${descripcion}"?\nLos bloques afectados volverán a estar habilitados para la mesita.`);
+      const conf = confirm(`⚠️ ¿Querés dar de baja la actividad semanal: "${descripcion}"?\nLos bloques afectados volverán a estar habilitados.`);
       if (conf) {
         try {
           await deleteDoc(doc(db, "eventos", id));
@@ -349,7 +350,7 @@
         let horaStr = `${String(h).padStart(2, '0')}:00`;
         let horaRangoStr = `${horaStr} a ${String(h+1).padStart(2, '0')}:00`;
         
-        let filaDesktop = `<tr class="hover:bg-gray-50 transition"><td class="border-r border-gray-200 font-bold bg-gray-50 text-gray-600 p-3">${horaRangoStr}</td>`;
+        let filaDesktop = `<tr class="hover:bg-gray-50 transition"><td class="border border-gray-200 font-bold bg-gray-50 text-gray-600 p-3">${horaRangoStr}</td>`;
         
         dias.forEach(d => {
           let anotados = turnos.filter(t => t.dia === d && h >= t.horaInicio && h < t.horaFin);
@@ -365,13 +366,12 @@
           }
 
           let estaElCompaneroFiltrado = anotados.some(t => t.nombre === filtro);
-          let claseCeldaDesktop = "border-r border-gray-200 p-2 h-20 text-xs vertical-align-top relative transition ";
+          let claseCeldaDesktop = "border border-gray-200 p-1 h-24 text-xs vertical-align-top relative transition ";
           
           if (esFeriado) {
             claseCeldaDesktop += "bg-amber-100/60 text-amber-800 font-medium italic";
           } else if (bloqueoActivo) {
-            // ROJO/ROSADO DE ADVERTENCIA UNIFICADO PARA ACTIVIDADES BLOQUEANTES
-            claseCeldaDesktop += "bg-red-50 text-red-900 font-bold border-2 border-red-200 shadow-inner flex items-center justify-center";
+            claseCeldaDesktop += "bg-red-50 text-red-900 border border-red-200 shadow-inner";
           } else if (filtro !== "TODOS") {
             if (estaElCompaneroFiltrado) claseCeldaDesktop += "bg-indigo-600 text-white font-bold shadow-inner border-2 border-indigo-700";
             else claseCeldaDesktop += "bg-gray-100 text-gray-400 opacity-30";
@@ -385,12 +385,13 @@
           if (esFeriado) {
             nombresHtml = `<div class="text-center mt-4 font-bold text-amber-700 uppercase tracking-wider text-[10px]">Feriado 🎉</div>`;
           } else if (bloqueoActivo) {
-            nombresHtml = `<div class="text-center w-full font-black text-red-700 px-1 py-2 tracking-wide text-[11px] uppercase">🚫 Actividad ATP:<br><span class="normal-case font-medium text-red-600">${bloqueoActivo.texto}</span></div>`;
+            // DISEÑO DEL BLOQUE ENTERO COMPACTO SEGURO
+            nombresHtml = `<div class="w-full h-full min-h-[70px] bg-red-100 border border-red-300 rounded-lg p-2 text-center text-red-800 font-black flex flex-col justify-center items-center uppercase tracking-wide text-[10px]">🚫 ACTIVIDAD ATP:<br><span class="normal-case font-semibold text-red-600 mt-0.5">${bloqueoActivo.texto}</span></div>`;
           } else if (filtro === "TODOS" || estaElCompaneroFiltrado) {
             nombresHtml = anotados.map(t => {
               let esFiltrado = (filtro !== "TODOS");
               let tagColor = esFiltrado ? "bg-white text-indigo-900 border-2 border-indigo-500" : "bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition duration-150";
-              return `<button onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" title="Dar de baja este turno" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5 opacity-0 hover:opacity-100">×</span></button>`;
+              return `<button type="button" onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" title="Dar de baja este turno" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5">×</span></button>`;
             }).join('');
           }
 
@@ -398,7 +399,7 @@
           filaDesktop += `<td class="${claseCeldaDesktop}">${nombresHtml} ${alerta}</td>`;
           
           // --- REGISTRO MÓVIL (DÍA ACTIVO) ---
-          if (d === diaMovilActivo) {
+          if (d === diaMovilActivo && modoVistaMovil === "lista") {
             let claseCeldaMovil = "p-3 rounded-xl flex flex-col gap-2 border bg-white shadow-sm transition ";
             let encabezadoCard = `<div class="flex justify-between items-center font-bold text-sm"><span class="text-gray-500">${horaRangoStr}</span>`;
             
@@ -428,7 +429,7 @@
             } else {
               anotados.forEach(t => {
                 if (filtro === "TODOS" || t.nombre === filtro) {
-                  nombresHtmlMovil += `<button onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" class="bg-gray-100 border text-gray-800 font-semibold px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 active:bg-red-100 active:text-red-700">${t.nombre} <span class="text-red-500 font-bold">×</span></button>`;
+                  nombresHtmlMovil += `<button type="button" onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" class="bg-gray-100 border text-gray-800 font-semibold px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 active:bg-red-100 active:text-red-700">${t.nombre} <span class="text-red-500 font-bold">×</span></button>`;
                 }
               });
             }
@@ -466,7 +467,7 @@
 
       let conflictoActividad = eventosGlobales.find(ev => ev.dia === dia && !(horaFin <= ev.horaInicio || horaInicio >= ev.horaFin));
       if (conflictoActividad) {
-        return alert(`¡Pará un cacho! No te podés anotar en este horario porque el día ${dia} tenemos la actividad semanal: "${conflictoActividad.texto}".`);
+        return alert(`¡Pará un cacho! No te podés anotar de ${String(horaInicio).padStart(2,'0')}:00 a ${String(horaFin).padStart(2,'0')}:00 porque el día ${dia} tenemos la actividad semanal: "${conflictoActividad.texto}".`);
       }
 
       try {
@@ -540,7 +541,7 @@
                 <span>🚫</span>
                 <span><strong>${ev.dia} de ${String(ev.horaInicio).padStart(2,'0')}:00 a ${String(ev.horaFin).padStart(2,'0')}:00</strong> - ${ev.texto}</span>
               </div>
-              <button onclick="window.eliminarEvento('${ev.id}', '${ev.texto}')" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg font-black transition">Bajar Actividad</button>
+              <button type="button" onclick="window.eliminarEvento('${ev.id}', '${ev.texto}')" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg font-black transition">Bajar Actividad</button>
             </div>
           `;
         });
