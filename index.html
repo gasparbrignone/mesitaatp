@@ -6,104 +6,131 @@
   <title>Gestión de Mesita - ATP</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans p-4">
+<body class="bg-gray-100 text-gray-800 font-sans p-2 sm:p-4">
 
-  <div class="max-w-7xl mx-auto space-y-6">
+  <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
     
-    <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-600">
-      <h1 class="text-3xl font-extrabold text-center text-indigo-600 mb-6">📌 Panel de Cobertura - La Mesita</h1>
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md border-t-4 border-indigo-600">
+      <div class="text-center mb-4">
+        <h1 class="text-2xl sm:text-3xl font-black text-indigo-600">📌 Panel de Cobertura - La Mesita</h1>
+        <div id="cartel-semana" class="inline-block mt-2 bg-indigo-100 text-indigo-800 font-bold px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
+          Cargando semana...
+        </div>
+      </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-          <div class="text-sm font-bold text-indigo-500 uppercase tracking-wide">Cobertura Total</div>
-          <div id="stat-cobertura" class="text-3xl font-black text-indigo-700 mt-1">0%</div>
-          <p class="text-[11px] text-gray-500 mt-1">Porcentaje de horas semanales con presencia</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+        <div class="bg-indigo-50 p-3 sm:p-4 rounded-xl border border-indigo-100 flex sm:flex-col justify-between sm:justify-center items-center">
+          <div class="text-xs font-bold text-indigo-500 uppercase tracking-wide">Cobertura Total</div>
+          <div id="stat-cobertura" class="text-2xl sm:text-3xl font-black text-indigo-700">0%</div>
         </div>
-        <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-          <div class="text-sm font-bold text-green-600 uppercase tracking-wide">Horarios Ideales</div>
-          <div id="stat-ideales" class="text-3xl font-black text-green-700 mt-1">0 / 50</div>
-          <p class="text-[11px] text-gray-500 mt-1">Bloques cubiertos por 2 o más compañeros</p>
+        <div class="bg-green-50 p-3 sm:p-4 rounded-xl border border-green-100 flex sm:flex-col justify-between sm:justify-center items-center">
+          <div class="text-xs font-bold text-green-600 uppercase tracking-wide">Horarios Ideales</div>
+          <div id="stat-ideales" class="text-2xl sm:text-3xl font-black text-green-700">0 / 50</div>
         </div>
-        <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
-          <div class="text-sm font-bold text-rose-500 uppercase tracking-wide">Baches Críticos</div>
-          <div id="stat-baches" class="text-3xl font-black text-rose-700 mt-1">50</div>
-          <p class="text-[11px] text-gray-500 mt-1">Horas de la semana que están en 0 absoluto</p>
+        <div class="bg-rose-50 p-3 sm:p-4 rounded-xl border border-rose-100 flex sm:flex-col justify-between sm:justify-center items-center">
+          <div class="text-xs font-bold text-rose-500 uppercase tracking-wide">Baches Críticos</div>
+          <div id="stat-baches" class="text-2xl sm:text-3xl font-black text-rose-700">50</div>
         </div>
       </div>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-md">
-      <h2 class="text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">✍️ Anotarse en la Grilla</h2>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
+      <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">✍️ Anotarse en la Grilla</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4">
         
         <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Compañero/a</label>
-          <select id="select-nombre" onchange="window.verificarNuevoNombre()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          <select id="select-nombre" onchange="window.verificarNuevoNombre()" class="p-3 border rounded-xl bg-gray-50 shadow-sm outline-none text-sm focus:ring-2 focus:ring-indigo-500">
             <option value="">-- Seleccioná --</option>
             <option value="NUEVO">+ Registrar nombre por 1ª vez</option>
           </select>
-          <input type="text" id="input-nuevo-nombre" placeholder="Tu nombre y apellido" class="hidden mt-2 p-2.5 border border-amber-400 rounded-xl bg-amber-50 shadow-sm outline-none">
+          <input type="text" id="input-nuevo-nombre" placeholder="Tu nombre y apellido" class="hidden mt-2 p-3 border border-amber-400 rounded-xl bg-amber-50 shadow-sm outline-none text-sm">
         </div>
 
         <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Día</label>
-          <select id="dia" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          <select id="dia" class="p-3 border rounded-xl bg-gray-50 shadow-sm outline-none text-sm focus:ring-2 focus:ring-indigo-500">
             <option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option>
           </select>
         </div>
 
         <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Desde qué hora</label>
-          <select id="hora-inicio" onchange="window.actualizarLimiteHoraFin()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+          <select id="hora-inicio" onchange="window.actualizarLimiteHoraFin()" class="p-3 border rounded-xl bg-gray-50 shadow-sm outline-none text-sm focus:ring-2 focus:ring-indigo-500"></select>
         </div>
 
         <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Hasta qué hora</label>
-          <select id="hora-fin" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+          <select id="hora-fin" class="p-3 border rounded-xl bg-gray-50 shadow-sm outline-none text-sm focus:ring-2 focus:ring-indigo-500"></select>
         </div>
 
         <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Permanencia</label>
-          <select id="tipo" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          <select id="tipo" class="p-3 border rounded-xl bg-gray-50 shadow-sm outline-none text-sm focus:ring-2 focus:ring-indigo-500">
             <option value="Semanal">Solo esta semana</option>
             <option value="Fijo">Horario Fijo</option>
           </select>
         </div>
 
       </div>
-      <button onclick="window.anotarse()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold p-3 rounded-xl shadow-lg transition transform active:scale-95">
+      <button onclick="window.anotarse()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold p-3.5 rounded-xl shadow-lg transition active:scale-[0.98] text-sm sm:text-base">
         Confirmar Turno
       </button>
     </div>
 
-    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="text-sm font-medium text-gray-600">🔎 ¿Querés ver solo tus horarios o los de alguien en específico?</div>
-      <select id="filtro-companero" onchange="window.filtrarGrilla()" class="p-2 border rounded-xl bg-gray-50 shadow-sm outline-none w-full md:w-64 font-semibold text-indigo-600 border-indigo-200">
+    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-xs sm:text-sm font-medium text-gray-600 text-center sm:text-left">🔎 ¿Querés filtrar por alguien en específico?</div>
+      <select id="filtro-companero" onchange="window.filtrarGrilla()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm outline-none w-full sm:w-64 font-semibold text-indigo-600 border-indigo-200 text-sm">
         <option value="TODOS">Ver Cobertura General</option>
       </select>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-md overflow-x-auto">
+    <div class="block md:hidden bg-white p-2 rounded-xl shadow-md flex justify-between gap-1 overflow-x-auto">
+      <button onclick="window.cambiarDiaMovil('Lunes')" id="btn-Lunes" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-indigo-600 text-white">Lun</button>
+      <button onclick="window.cambiarDiaMovil('Martes')" id="btn-Martes" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600">Mar</button>
+      <button onclick="window.cambiarDiaMovil('Miércoles')" id="btn-Miércoles" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600">Mié</button>
+      <button onclick="window.cambiarDiaMovil('Jueves')" id="btn-Jueves" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600">Jue</button>
+      <button onclick="window.cambiarDiaMovil('Viernes')" id="btn-Viernes" class="flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600">Vie</button>
+    </div>
+
+    <div class="block md:hidden space-y-2" id="lista-movil-cuerpo"></div>
+
+    <div class="hidden md:block bg-white p-6 rounded-2xl shadow-md overflow-x-auto">
       <table class="w-full table-fixed border-collapse border border-gray-200 text-center text-sm">
         <thead>
           <tr class="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
             <th class="w-24 border-r border-gray-200 p-3">Bloque</th>
-            <th class="border-r border-gray-200 p-3 text-indigo-600">Lunes</th>
-            <th class="border-r border-gray-200 p-3 text-indigo-600">Martes</th>
-            <th class="border-r border-gray-200 p-3 text-indigo-600">Miércoles</th>
-            <th class="border-r border-gray-200 p-3 text-indigo-600">Jueves</th>
-            <th class="p-3 text-indigo-600">Viernes</th>
+            <th id="th-Lunes" class="border-r border-gray-200 p-3 text-indigo-600">Lunes</th>
+            <th id="th-Martes" class="border-r border-gray-200 p-3 text-indigo-600">Martes</th>
+            <th id="th-Miércoles" class="border-r border-gray-200 p-3 text-indigo-600">Miércoles</th>
+            <th id="th-Jueves" class="border-r border-gray-200 p-3 text-indigo-600">Jueves</th>
+            <th id="th-Viernes" class="p-3 text-indigo-600">Viernes</th>
           </tr>
         </thead>
         <tbody id="tabla-cuerpo" class="divide-y divide-gray-200"></tbody>
       </table>
     </div>
 
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
+      <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">📅 Eventos Importantes de la Semana</h2>
+      
+      <div id="lista-eventos" class="space-y-2 mb-4 max-h-60 overflow-y-auto">
+        <p class="text-sm text-gray-400 italic">No hay eventos cargados para esta semana.</p>
+      </div>
+
+      <div class="flex gap-2 border-t pt-4">
+        <input type="text" id="input-evento" placeholder="Ej: Pasada por los salones de Injuria 14hs / Volanteada" class="flex-1 p-2.5 border rounded-xl bg-gray-50 text-sm outline-none focus:ring-2 focus:ring-amber-500">
+        <button onclick="window.agregarEvento()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-2 rounded-xl text-sm shadow transition active:scale-95">
+          Agregar
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBYpPCCEgsrjBDT3lN4XeKcQHSYu4A0VaY",
@@ -121,6 +148,50 @@
     const horasInput = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
     const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
     let turnosGlobales = [];
+    let diaMovilActivo = "Lunes";
+    
+    // Mapeo de fechas de la semana actual y feriados
+    let fechasSemana = {};
+    let feriadosDetectados = {};
+
+    function calcularFechasDeLaSemana() {
+      let hoy = new Date();
+      let diaSemana = hoy.getDay(); 
+      let distanciaALunes = diaSemana === 0 ? 1 : 1 - diaSemana; // Si es domingo (0), el lunes es mañana (+1)
+
+      let lunes = new Date(hoy);
+      lunes.setDate(hoy.getDate() + distanciaALunes);
+
+      // Feriados inamovibles o fijados de Argentina para 2026 (se pueden ir sumando acá con formato DD/MM)
+      const feriados2026 = ["24/03", "02/04", "01/05", "25/05", "17/06", "20/06", "09/07", "17/08", "12/10", "23/11", "08/12", "25/12"];
+
+      dias.forEach((d, index) => {
+        let fechaDia = new Date(lunes);
+        fechaDia.setDate(lunes.getDate() + index);
+        
+        let diaStr = String(fechaDia.getDate()).padStart(2, '0');
+        let mesStr = String(fechaDia.getMonth() + 1).padStart(2, '0');
+        let fechaCorta = `${diaStr}/${mesStr}`;
+
+        fechasSemana[d] = fechaCorta;
+        feriadosDetectados[d] = feriados2026.includes(fechaCorta);
+
+        // Actualizar encabezados de la tabla en PC
+        const th = document.getElementById(`th-${d}`);
+        if(th) {
+          th.innerHTML = `${d}<br><span class="text-[11px] font-normal text-gray-400">${fechaCorta}</span>`;
+          if(feriadosDetectados[d]) th.innerHTML += ` <span class="text-xs">🎉</span>`;
+        }
+        // Actualizar botones en celular
+        const btn = document.getElementById(`btn-${d}`);
+        if(btn) btn.innerHTML = `${d.substring(0,3)}<br><span class="text-[9px] opacity-75">${fechaCorta}</span>`;
+      });
+
+      // Renderizar cartel principal del Header
+      let viernesStr = fechasSemana["Viernes"];
+      let lunesStr = fechasSemana["Lunes"];
+      document.getElementById('cartel-semana').innerText = `📅 Semana del Lunes ${lunesStr} al Viernes ${viernesStr}`;
+    }
 
     function armarSelectsHorarios() {
       const start = document.getElementById('hora-inicio');
@@ -153,6 +224,19 @@
       }
     };
 
+    window.cambiarDiaMovil = function(dia) {
+      diaMovilActivo = dia;
+      dias.forEach(d => {
+        const btn = document.getElementById(`btn-${d}`);
+        if (d === dia) {
+          btn.className = "flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-indigo-600 text-white";
+        } else {
+          btn.className = "flex-1 py-2 px-1 text-xs font-bold rounded-lg transition text-center bg-gray-100 text-gray-600";
+        }
+      });
+      window.calcularEstadisticasYRenderizar(turnosGlobales);
+    };
+
     function actualizarSelectNombres(turnos) {
       const nombresUnicos = [...new Set(turnos.map(t => t.nombre))].sort();
       const selectInscripcion = document.getElementById('select-nombre');
@@ -176,60 +260,112 @@
     }
 
     window.calcularEstadisticasYRenderizar = function(turnos) {
-      const cuerpo = document.getElementById('tabla-cuerpo');
-      cuerpo.innerHTML = '';
+      const cuerpoDesktop = document.getElementById('tabla-cuerpo');
+      const cuerpoMovil = document.getElementById('lista-movil-cuerpo');
       const filtro = document.getElementById('filtro-companero').value;
+
+      cuerpoDesktop.innerHTML = '';
+      cuerpoMovil.innerHTML = '';
 
       let baches = 0;
       let ideales = 0;
       let slotsCubiertos = 0;
-      const totalSlotsSemanales = 50;
+      let totalSlotsHabilesSemanales = 50;
+
+      // Restar bloques de feriados del total semanal para no castigar el porcentaje
+      dias.forEach(d => {
+        if(feriadosDetectados[d]) totalSlotsHabilesSemanales -= 10;
+      });
 
       for (let h = 8; h < 18; h++) {
         let horaStr = `${String(h).padStart(2, '0')}:00`;
-        let fila = `<tr class="hover:bg-gray-50 transition"><td class="border-r border-gray-200 font-bold bg-gray-50 text-gray-600 p-3">${horaStr} a ${String(h+1).padStart(2, '0')}:00</td>`;
+        let horaRangoStr = `${horaStr} a ${String(h+1).padStart(2, '0')}:00`;
+        
+        let filaDesktop = `<tr class="hover:bg-gray-50 transition"><td class="border-r border-gray-200 font-bold bg-gray-50 text-gray-600 p-3">${horaRangoStr}</td>`;
         
         dias.forEach(d => {
           let anotados = turnos.filter(t => t.dia === d && h >= t.horaInicio && h < t.horaFin);
+          let esFeriado = feriadosDetectados[d];
           
-          if (anotados.length === 0) baches++;
-          else if (anotados.length >= 2) ideales++;
-          if (anotados.length > 0) slotsCubiertos++;
+          // Métricas (omitir si el día es feriado)
+          if (!esFeriado) {
+            if (anotados.length === 0) baches++;
+            else if (anotados.length >= 2) ideales++;
+            if (anotados.length > 0) slotsCubiertos++;
+          }
 
           let estaElCompaneroFiltrado = anotados.some(t => t.nombre === filtro);
-          let claseCelda = "border-r border-gray-200 p-2 h-20 text-xs vertical-align-top relative transition ";
           
-          if (filtro !== "TODOS") {
-            if (estaElCompaneroFiltrado) {
-              claseCelda += "bg-indigo-600 text-white font-bold shadow-inner border-2 border-indigo-700";
-            } else {
-              claseCelda += "bg-gray-100 text-gray-400 opacity-30";
-            }
+          // Estilo de celda PC
+          let claseCeldaDesktop = "border-r border-gray-200 p-2 h-20 text-xs vertical-align-top relative transition ";
+          if (esFeriado) {
+            claseCeldaDesktop += "bg-amber-100/60 text-amber-800 font-medium italic";
+          } else if (filtro !== "TODOS") {
+            if (estaElCompaneroFiltrado) claseCeldaDesktop += "bg-indigo-600 text-white font-bold shadow-inner border-2 border-indigo-700";
+            else claseCeldaDesktop += "bg-gray-100 text-gray-400 opacity-30";
           } else {
-            if (anotados.length === 0) claseCelda += "bg-rose-50 text-rose-700";
-            else if (anotados.length === 1) claseCelda += "bg-amber-50 text-amber-800";
-            else claseCelda += "bg-emerald-50 text-emerald-900";
+            if (anotados.length === 0) claseCeldaDesktop += "bg-rose-50 text-rose-700";
+            else if (anotados.length === 1) claseCeldaDesktop += "bg-amber-50 text-amber-800";
+            else claseCeldaDesktop += "bg-emerald-50 text-emerald-900";
           }
 
           let nombresHtml = "";
-          if (filtro === "TODOS" || estaElCompaneroFiltrado) {
+          if (esFeriado) {
+            nombresHtml = `<div class="text-center mt-4 font-bold text-amber-700 uppercase tracking-wider text-[10px]">Feriado 🎉</div>`;
+          } else if (filtro === "TODOS" || estaElCompaneroFiltrado) {
             nombresHtml = anotados.map(t => {
               let tagColor = (filtro !== "TODOS") ? "bg-white text-indigo-900" : "bg-white border border-gray-200 text-gray-700";
               return `<span class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold">${t.nombre} <span class="text-[9px] font-normal opacity-70">(${t.tipo[0]})</span></span>`;
             }).join('');
           }
 
-          let alerta = (anotados.length < 2 && filtro === "TODOS") ? `<div class="text-[10px] font-bold text-rose-500 absolute bottom-1 right-2">⚠️ Falta gente</div>` : '';
+          let alerta = (anotados.length < 2 && filtro === "TODOS" && !esFeriado) ? `<div class="text-[10px] font-bold text-rose-500 absolute bottom-1 right-2">⚠️ Falta gente</div>` : '';
+          filaDesktop += `<td class="${claseCeldaDesktop}">${nombresHtml} ${alerta}</td>`;
           
-          fila += `<td class="${claseCelda}">${nombresHtml} ${alerta}</td>`;
+          // --- CELULARES (DÍA ACTIVO) ---
+          if (d === diaMovilActivo) {
+            let claseCeldaMovil = "p-3 rounded-xl flex flex-col gap-2 border bg-white shadow-sm transition ";
+            let encabezadoCard = `<div class="flex justify-between items-center font-bold text-sm"><span class="text-gray-500">${horaRangoStr}</span>`;
+            
+            if (esFeriado) {
+              claseCeldaMovil += "bg-amber-50/70 border-amber-200";
+              encabezadoCard += `<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold text-[9px]">Feriado 🎉</span>`;
+            } else if (filtro !== "TODOS") {
+              if (estaElCompaneroFiltrado) claseCeldaMovil += "border-2 border-indigo-500 bg-indigo-50";
+              else claseCeldaMovil += "opacity-40";
+            } else {
+              if (anotados.length === 0) encabezadoCard += `<span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Vacío</span>`;
+              else if (anotados.length === 1) encabezadoCard += `<span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">⚠️ Falta 1</span>`;
+              else encabezadoCard += `<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Cubierto</span>`;
+            }
+            encabezadoCard += `</div>`;
+
+            let nombresHtmlMovil = `<div class="flex flex-wrap gap-1">`;
+            if (esFeriado) {
+              nombresHtmlMovil += `<span class="text-xs text-amber-600 italic">Facultad cerrada o sin actividad oficial</span>`;
+            } else if (anotados.length === 0 && filtro === "TODOS") {
+              nombresHtmlMovil += `<span class="text-xs text-gray-400 italic">Nadie anotado todavía</span>`;
+            } else {
+              anotados.forEach(t => {
+                if (filtro === "TODOS" || t.nombre === filtro) {
+                  nombresHtmlMovil += `<span class="bg-gray-100 border text-gray-800 font-semibold px-2.5 py-1 rounded-lg text-xs">${t.nombre} <span class="text-[10px] text-gray-400 font-normal">(${t.tipo})</span></span>`;
+                }
+              });
+            }
+            nombresHtmlMovil += `</div>`;
+
+            cuerpoMovil.innerHTML += `<div class="${claseCeldaMovil}">${encabezadoCard}${nombresHtmlMovil}</div>`;
+          }
         });
         
-        fila += '</tr>';
-        cuerpo.innerHTML += fila;
+        filaDesktop += '</tr>';
+        cuerpoDesktop.innerHTML += filaDesktop;
       }
 
-      document.getElementById('stat-cobertura').innerText = `${Math.round((slotsCubiertos / totalSlotsSemanales) * 100)}%`;
-      document.getElementById('stat-ideales').innerText = `${ideales} / 50`;
+      // Renderizar contadores superiores (Si es 100% feriado la semana da 100%)
+      let porcentaje = totalSlotsHabilesSemanales > 0 ? Math.round((slotsCubiertos / totalSlotsHabilesSemanales) * 100) : 100;
+      document.getElementById('stat-cobertura').innerText = `${porcentaje}%`;
+      document.getElementById('stat-ideales').innerText = `${ideales} / ${totalSlotsHabilesSemanales}`;
       document.getElementById('stat-baches').innerText = baches;
     };
 
@@ -268,8 +404,50 @@
       }
     };
 
-    // Inicialización del sistema
+    // --- SECCIÓN LÓGICA DE EVENTOS ---
+    window.agregarEvento = async function() {
+      const texto = document.getElementById('input-evento').value.trim();
+      if (!texto) return alert('Escribí algo para el evento.');
+
+      try {
+        await addDoc(collection(db, "eventos"), {
+          texto: texto,
+          fechaCreacion: new Date().getTime()
+        });
+        document.getElementById('input-evento').value = '';
+      } catch (e) {
+        alert('Error al guardar evento: ' + e);
+      }
+    };
+
+    function escucharEventos() {
+      const q = query(collection(db, "eventos"), orderBy("fechaCreacion", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const lista = document.getElementById('lista-eventos');
+        lista.innerHTML = '';
+        
+        if (snapshot.empty) {
+          lista.innerHTML = '<p class="text-sm text-gray-400 italic">No hay eventos cargados para esta semana.</p>';
+          return;
+        }
+
+        snapshot.forEach((doc) => {
+          const ev = doc.data();
+          lista.innerHTML += `
+            <div class="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs sm:text-sm text-amber-900 font-medium shadow-sm">
+              <span class="mt-0.5">📢</span>
+              <span class="break-all">${ev.texto}</span>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // Inicialización del sistema completo
+    calcularFechasDeLaSemana();
     armarSelectsHorarios();
+    escucharEventos();
+    
     onSnapshot(collection(db, "turnos"), (snapshot) => {
       turnosGlobales = [];
       snapshot.forEach((doc) => turnosGlobales.push(doc.data()));
