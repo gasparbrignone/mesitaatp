@@ -119,11 +119,11 @@
     </div>
 
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
-      <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">📅 Bloqueo de Horarios por Actividades de la Semana</h2>
+      <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">📅 Agregar una Actividad Semanal</h2>
       
       <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-amber-50/50 p-3 rounded-xl border border-amber-100 mb-4">
         <div class="flex flex-col gap-1">
-          <label class="text-[11px] font-bold text-amber-800">Día de Actividad</label>
+          <label class="text-[11px] font-bold text-amber-800">Día</label>
           <select id="ev-dia" class="p-2 border rounded-lg bg-white text-sm outline-none">
             <option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option>
           </select>
@@ -137,16 +137,16 @@
           <select id="ev-fin" class="p-2 border rounded-lg bg-white text-sm outline-none"></select>
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-[11px] font-bold text-amber-800">Nombre de la Actividad / Razón</label>
-          <input type="text" id="ev-texto" placeholder="Ej: Asamblea / Pasada Salones" class="p-2 border rounded-lg bg-white text-sm outline-none">
+          <label class="text-[11px] font-bold text-amber-800">Nombre de la Actividad</label>
+          <input type="text" id="ev-texto" placeholder="Ej: Asamblea General / Pasada por Salones" class="p-2 border rounded-lg bg-white text-sm outline-none">
         </div>
       </div>
       <button onclick="window.agregarEvento()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold p-2.5 rounded-xl text-sm shadow transition active:scale-95 mb-4">
-        Bloquear Horario de Mesita
+        Agregar Actividad Semanal
       </button>
 
       <div id="lista-eventos" class="space-y-2 max-h-40 overflow-y-auto">
-        <p class="text-xs text-gray-400 italic">No hay actividades bloqueantes cargadas.</p>
+        <p class="text-xs text-gray-400 italic">No hay actividades cargadas para esta semana.</p>
       </div>
     </div>
 
@@ -190,7 +190,7 @@
       let lunes = new Date(hoy);
       lunes.setDate(hoy.getDate() + distanciaALunes);
       lunes.setHours(0,0,0,0);
-      lunesActualTimestamp = lunes.getTime(); // Guardamos la estampa de tiempo límite de esta semana
+      lunesActualTimestamp = lunes.getTime();
 
       const feriados2026 = ["24/03", "02/04", "01/05", "25/05", "17/06", "20/06", "09/07", "17/08", "12/10", "23/11", "08/12", "25/12"];
 
@@ -268,7 +268,7 @@
 
     window.cambiarModoVistaMovil = function(modo) {
       modoVistaMovil = modo;
-      const btnLista = document.getElementById('btn-vista-lista');
+      const btnLista = document.getElementById('btn-vista-vista');
       const btnGrilla = document.getElementById('btn-vista-grilla');
       const contenedorTabla = document.getElementById('contenedor-tabla-desktop');
       const contenedorDias = document.getElementById('contenedor-dias-movil');
@@ -308,7 +308,6 @@
       selectFiltro.value = valorFiltroActual;
     }
 
-    // --- FUNCIÓN GLOBAL PARA DAR DE BAJA TURNOS DE LA MESITA ---
     window.eliminarTurno = async function(id, nombre, dia, inicio, fin) {
       const conf = confirm(`⚠️ ¿Che, estás seguro de que querés eliminar el horario de ${nombre} el día ${dia} de ${String(inicio).padStart(2,'0')}:00 a ${String(fin).padStart(2,'0')}:00?\n\nEste bloque volverá a quedar vacío si no hay nadie más.`);
       if (conf) {
@@ -321,15 +320,14 @@
       }
     };
 
-    // --- FUNCIÓN GLOBAL PARA DAR DE BAJA ACTIVIDADES BLOQUEANTES ---
     window.eliminarEvento = async function(id, descripcion) {
-      const conf = confirm(`⚠️ ¿Querés levantar el bloqueo de actividad: "${descripcion}"?\nLos horarios afectados volverán a quedar habilitados.`);
+      const conf = confirm(`⚠️ ¿Querés dar de baja la actividad semanal: "${descripcion}"?\nLos bloques afectados volverán a estar habilitados para la mesita.`);
       if (conf) {
         try {
           await deleteDoc(doc(db, "eventos", id));
-          alert("Bloqueo eliminado.");
+          alert("Actividad eliminada.");
         } catch (e) {
-          alert("Error al eliminar bloqueo: " + e);
+          alert("Error al eliminar la actividad: " + e);
         }
       }
     };
@@ -363,7 +361,7 @@
             else if (anotados.length >= 2) ideales++;
             if (anotados.length > 0) slotsCubiertos++;
           } else if (bloqueoActivo && !esFeriado) {
-            totalSlotsHabilesSemanales--;
+            totalSlotsHabilesSemanales--; 
           }
 
           let estaElCompaneroFiltrado = anotados.some(t => t.nombre === filtro);
@@ -372,7 +370,8 @@
           if (esFeriado) {
             claseCeldaDesktop += "bg-amber-100/60 text-amber-800 font-medium italic";
           } else if (bloqueoActivo) {
-            claseCeldaDesktop += "bg-gray-200 text-gray-500 font-bold border-2 border-dashed border-gray-300 shadow-inner";
+            // ROJO/ROSADO DE ADVERTENCIA UNIFICADO PARA ACTIVIDADES BLOQUEANTES
+            claseCeldaDesktop += "bg-red-50 text-red-900 font-bold border-2 border-red-200 shadow-inner flex items-center justify-center";
           } else if (filtro !== "TODOS") {
             if (estaElCompaneroFiltrado) claseCeldaDesktop += "bg-indigo-600 text-white font-bold shadow-inner border-2 border-indigo-700";
             else claseCeldaDesktop += "bg-gray-100 text-gray-400 opacity-30";
@@ -386,12 +385,12 @@
           if (esFeriado) {
             nombresHtml = `<div class="text-center mt-4 font-bold text-amber-700 uppercase tracking-wider text-[10px]">Feriado 🎉</div>`;
           } else if (bloqueoActivo) {
-            nombresHtml = `<div class="text-center mt-2 font-bold text-gray-600 bg-gray-300/50 px-1 py-1 rounded tracking-wide text-[10px] break-words">🚫 Bloqueado:<br>${bloqueoActivo.texto}</div>`;
+            nombresHtml = `<div class="text-center w-full font-black text-red-700 px-1 py-2 tracking-wide text-[11px] uppercase">🚫 Actividad ATP:<br><span class="normal-case font-medium text-red-600">${bloqueoActivo.texto}</span></div>`;
           } else if (filtro === "TODOS" || estaElCompaneroFiltrado) {
             nombresHtml = anotados.map(t => {
               let esFiltrado = (filtro !== "TODOS");
               let tagColor = esFiltrado ? "bg-white text-indigo-900 border-2 border-indigo-500" : "bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition duration-150";
-              return `<button onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" title="Hacé clic para dar de baja este turno" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5 opacity-0 hover:opacity-100">×</span></button>`;
+              return `<button onclick="window.eliminarTurno('${t.id}', '${t.nombre}', '${t.dia}', ${t.horaInicio}, ${t.horaFin})" title="Dar de baja este turno" class="inline-block ${tagColor} px-2 py-1 rounded-md shadow-sm m-0.5 font-semibold text-left select-none">${t.nombre} <span class="text-[9px] font-normal opacity-60">(${t.tipo[0]})</span> <span class="text-xs font-black text-red-500 ml-0.5 opacity-0 hover:opacity-100">×</span></button>`;
             }).join('');
           }
 
@@ -407,8 +406,8 @@
               claseCeldaMovil += "bg-amber-50/70 border-amber-200";
               encabezadoCard += `<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold text-[9px]">Feriado 🎉</span>`;
             } else if (bloqueoActivo) {
-              claseCeldaMovil += "bg-gray-100 border-gray-300 border-dashed border-2";
-              encabezadoCard += `<span class="text-xs bg-gray-300 text-gray-700 px-2 py-0.5 rounded-full font-extrabold text-[9px]">🚫 Bloqueado</span>`;
+              claseCeldaMovil += "bg-red-50 border-red-200 border-2 shadow-inner";
+              encabezadoCard += `<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-black text-[9px] uppercase tracking-wider">🚫 Actividad ATP</span>`;
             } else if (filtro !== "TODOS") {
               if (estaElCompaneroFiltrado) claseCeldaMovil += "border-2 border-indigo-500 bg-indigo-50";
               else claseCeldaMovil += "opacity-40";
@@ -423,7 +422,7 @@
             if (esFeriado) {
               nombresHtmlMovil += `<span class="text-xs text-amber-600 italic">Facultad cerrada</span>`;
             } else if (bloqueoActivo) {
-              nombresHtmlMovil += `<span class="text-xs text-gray-600 font-bold italic">Actividad: ${bloqueoActivo.texto}</span>`;
+              nombresHtmlMovil += `<span class="text-xs text-red-800 font-bold italic">No cubrir mesita: ${bloqueoActivo.texto}</span>`;
             } else if (anotados.length === 0 && filtro === "TODOS") {
               nombresHtmlMovil += `<span class="text-xs text-gray-400 italic">Nadie anotado todavía</span>`;
             } else {
@@ -467,7 +466,7 @@
 
       let conflictoActividad = eventosGlobales.find(ev => ev.dia === dia && !(horaFin <= ev.horaInicio || horaInicio >= ev.horaFin));
       if (conflictoActividad) {
-        return alert(`¡Che! Tenés la actividad "${conflictoActividad.texto}" este día a este horario.`);
+        return alert(`¡Pará un cacho! No te podés anotar en este horario porque el día ${dia} tenemos la actividad semanal: "${conflictoActividad.texto}".`);
       }
 
       try {
@@ -477,7 +476,7 @@
           horaInicio: horaInicio,
           horaFin: horaFin,
           tipo: tipo,
-          timestamp: new Date().getTime() // Clave para la escoba de domingos
+          timestamp: new Date().getTime()
         });
 
         document.getElementById('input-nuevo-nombre').value = '';
@@ -496,7 +495,7 @@
       const horaFin = parseInt(document.getElementById('ev-fin').value);
       const texto = document.getElementById('ev-texto').value.trim();
 
-      if (!texto) return alert('Escribí una descripción de la actividad/bloqueo.');
+      if (!texto) return alert('Escribí el nombre de la actividad semanal.');
 
       try {
         await addDoc(collection(db, "eventos"), {
@@ -504,12 +503,12 @@
           horaInicio: horaInicio,
           horaFin: horaFin,
           texto: texto,
-          fechaCreacion: new Date().getTime() // Clave para limpiar eventos viejos
+          fechaCreacion: new Date().getTime() 
         });
         document.getElementById('ev-texto').value = '';
-        alert('Horario de mesita bloqueado con éxito.');
+        alert('Actividad semanal cargada y grilla bloqueada.');
       } catch (e) {
-        alert('Error al guardar bloqueo: ' + e);
+        alert('Error al guardar: ' + e);
       }
     };
 
@@ -522,7 +521,6 @@
         
         snapshot.forEach((docSnap) => {
           let evData = docSnap.data();
-          // 🔥 ESCOBA AUTOMÁTICA DE EVENTOS VIEJOS
           if (evData.fechaCreacion < lunesActualTimestamp) {
             deleteDoc(doc(db, "eventos", docSnap.id));
           } else {
@@ -531,18 +529,18 @@
         });
 
         if (eventosGlobales.length === 0) {
-          lista.innerHTML = '<p class="text-xs text-gray-400 italic">No hay actividades bloqueantes cargadas.</p>';
+          lista.innerHTML = '<p class="text-xs text-gray-400 italic">No hay actividades cargadas para esta semana.</p>';
           return;
         }
 
         eventosGlobales.forEach((ev) => {
           lista.innerHTML += `
-            <div class="flex items-center justify-between p-2.5 bg-gray-100 border border-gray-300 rounded-xl text-xs text-gray-700 font-bold shadow-sm">
+            <div class="flex items-center justify-between p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 font-bold shadow-sm">
               <div class="flex items-start gap-2">
                 <span>🚫</span>
                 <span><strong>${ev.dia} de ${String(ev.horaInicio).padStart(2,'0')}:00 a ${String(ev.horaFin).padStart(2,'0')}:00</strong> - ${ev.texto}</span>
               </div>
-              <button onclick="window.eliminarEvento('${ev.id}', '${ev.texto}')" class="text-red-500 hover:bg-red-100 px-2 py-1 rounded-lg font-black transition">Eliminar</button>
+              <button onclick="window.eliminarEvento('${ev.id}', '${ev.texto}')" class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg font-black transition">Bajar Actividad</button>
             </div>
           `;
         });
@@ -550,21 +548,15 @@
       });
     }
 
-    // Inicializaciones básicas
     calcularFechasDeLaSemana();
     armarSelectsHorarios();
-    
     document.getElementById('ev-inicio').onchange = window.actualizarLimiteHoraFinEventos;
-
     escucharEventos();
     
-    // Escucha en tiempo real de turnos con ESCOBA AUTOMÁTICA DE TURNOS SEMANALES
     onSnapshot(collection(db, "turnos"), (snapshot) => {
       turnosGlobales = [];
       snapshot.forEach((docSnap) => {
         let tData = docSnap.data();
-        
-        // 🔥 ESCOBA AUTOMÁTICA DE TURNOS SEMANALES VIEJOS
         if (tData.tipo === "Semanal" && tData.timestamp && tData.timestamp < lunesActualTimestamp) {
           deleteDoc(doc(db, "turnos", docSnap.id));
         } else {
