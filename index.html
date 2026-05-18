@@ -36,7 +36,7 @@
       <h2 class="text-xl font-bold mb-4 text-gray-700 flex items-center gap-2">✍️ Anotarse en la Grilla</h2>
       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
         
-        <div class="flex flex-col gap-1 md:col-span-1">
+        <div class="flex flex-col gap-1">
           <label class="text-xs font-bold text-gray-500">Compañero/a</label>
           <select id="select-nombre" onchange="window.verificarNuevoNombre()" class="p-2.5 border rounded-xl bg-gray-50 shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none">
             <option value="">-- Seleccioná --</option>
@@ -122,7 +122,6 @@
     const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
     let turnosGlobales = [];
 
-    // Forzar que las funciones se expongan globalmente al HTML de inmediato
     function armarSelectsHorarios() {
       const start = document.getElementById('hora-inicio');
       start.innerHTML = '';
@@ -243,8 +242,7 @@
       const inputNuevo = document.getElementById('input-nuevo-nombre').value.trim();
       const dia = document.getElementById('dia').value;
       const horaInicio = parseInt(document.getElementById('hora-inicio').value);
-      const horaFin = parseInt(document.getElementById('hora-fin'); // wait, let's fix missing closing bracket in selection just in case
-      const horaFinVal = parseInt(document.getElementById('hora-fin').value);
+      const horaFin = parseInt(document.getElementById('hora-fin').value);
       const tipo = document.getElementById('tipo').value;
 
       let nombreFinal = (selectNombre === 'NUEVO') ? inputNuevo : selectNombre;
@@ -256,7 +254,7 @@
           nombre: nombreFinal,
           dia: dia,
           horaInicio: horaInicio,
-          horaFin: horaFinVal,
+          horaFin: horaFin,
           tipo: tipo
         });
 
@@ -270,7 +268,7 @@
       }
     };
 
-    // Ejecución inicial de selects y escucha en tiempo real
+    // Inicialización del sistema
     armarSelectsHorarios();
     onSnapshot(collection(db, "turnos"), (snapshot) => {
       turnosGlobales = [];
